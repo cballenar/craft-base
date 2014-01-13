@@ -1,0 +1,21 @@
+# CMS related files
+craft/app/*
+craft/storage/*
+public/content/*
+craft/config/license.key
+
+# OS or program files
+.DS_store
+.tmproj
+Thumbs.db
+.Spotlight-V100
+.Trashes
+
+# Grunt
+node_modules
+dev/build
+
+# Others
+*.sass-cache
+*.sublime-project
+*.sublime-workspace
