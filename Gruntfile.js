@@ -60,7 +60,7 @@ module.exports = function (grunt) {
 					style: 'expanded'
 				},
 				files: {
-					'dev/build/css/main.css' : 'dev/source/sass/main.scss'
+					'dev/build/css/main.min.css' : 'dev/source/sass/main.scss'
 				}
 			},
 			build: {
@@ -68,7 +68,7 @@ module.exports = function (grunt) {
 					style: 'compressed'
 				},
 				files: {
-					'dev/build/css/main.css' : 'dev/source/sass/main.scss'
+					'dev/build/css/main.min.css' : 'dev/source/sass/main.scss'
 				}
 			}
 		},
@@ -79,7 +79,7 @@ module.exports = function (grunt) {
 				browsers: ['> 6%', 'last 2 version']
 			},
 			build: {
-				src: 'dev/build/css/main.css'
+				src: 'dev/build/css/main.min.css'
 			}
 		},
 
@@ -124,8 +124,8 @@ module.exports = function (grunt) {
 
 		copy: {
 			build: {
-				cwd: 'dev/source',
-				src: [ 'css/*', 'js/**/*'],
+				cwd: 'dev/build',
+				src: [ '**/*'],
 				dest: 'public/assets/',
 				expand: true,
 			},
