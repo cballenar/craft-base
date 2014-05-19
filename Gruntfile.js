@@ -1,7 +1,7 @@
 module.exports = function (grunt) {
 
-    // Load all grunt tasks
-    require('load-grunt-tasks')(grunt);
+	// Load all grunt tasks
+	require('load-grunt-tasks')(grunt);
 
 	// Project Configuration
 	grunt.initConfig({
@@ -18,7 +18,7 @@ module.exports = function (grunt) {
 			dist: {
 				options: {
 					open: true,
-					base: 'dev/build/'
+					base: 'build/'
 				}
 			}
 		},
@@ -29,26 +29,33 @@ module.exports = function (grunt) {
 				livereload: true
 			},
 			css: {
-				files: ['dev/source/sass/**/*.scss'],
+				files: ['dev/sass/**/*.scss'],
 				tasks: ['sass:dev', 'autoprefixer']
 			},
 			js: {
-				files: ['dev/source/js/**/*.js'],
+				files: ['dev/js/**/*.js'],
 				tasks: ['concat', 'uglify:dev']
 			},
 			jade: {
-				files: ['dev/source/**/*.jade'],
+				files: ['dev/**/*.jade'],
 				tasks: ['jade']
+			},
+			assets: {
+				files: ['dev/js/vendors/**/*', 'dev/plugins/**/*', 'dev/img/**/*'],
+				tasks: ['copy']
 			}
 		},
 
 
 		jade: {
+			options: {
+				pretty: true
+			},
 			dev: {
 				expand: true,
-				cwd: 'dev/source/',
-				src: ['**/*.jade', 'jade/**/*'],
-				dest: 'dev/build/',
+				cwd: 'dev/',
+				src: ['**/*.jade', '!jade/**/*'],
+				dest: 'build/',
 				ext: '.html'
 			}
 		},
@@ -60,7 +67,7 @@ module.exports = function (grunt) {
 					style: 'expanded'
 				},
 				files: {
-					'dev/build/css/main.min.css' : 'dev/source/sass/main.scss'
+					'build/css/main.min.css' : 'dev/sass/main.scss'
 				}
 			},
 			build: {
@@ -68,7 +75,7 @@ module.exports = function (grunt) {
 					style: 'compressed'
 				},
 				files: {
-					'dev/build/css/main.min.css' : 'dev/source/sass/main.scss'
+					'build/css/main.min.css' : 'dev/sass/main.scss'
 				}
 			}
 		},
@@ -76,10 +83,10 @@ module.exports = function (grunt) {
 
 		autoprefixer: {
 			options: {
-				browsers: ['> 6%', 'last 2 version']
+				browsers: ['> 6%', 'last 2 version', 'Firefox > 20']
 			},
 			build: {
-				src: 'dev/build/css/main.min.css'
+				src: 'build/css/main.min.css'
 			}
 		},
 
@@ -89,8 +96,8 @@ module.exports = function (grunt) {
 				separator: ';',
 			},
 			plugins: {
-				src: ['dev/source/js/plugins/*.js'],
-				dest: 'dev/source/js/plugins.js',
+				src: ['dev/js/plugins/*.js'],
+				dest: 'dev/js/plugins.js',
 			},
 		},
 
@@ -103,18 +110,18 @@ module.exports = function (grunt) {
 					beautify: true
 				},
 				files: [{
-					cwd: 'dev/source/js/',
-					src: ['**/*.js', '!plugins/*.js'],
-					dest: 'dev/build/js/',
+					cwd: 'dev/js/',
+					src: ['**/*.js', '!plugins/*.js', '!**/*.min.js'],
+					dest: 'build/js/',
 					expand: true,
 					ext: '.min.js'
 				}]
 			},
 			build: {
 				files: [{
-					cwd: 'dev/source/js/',
-					src: ['**/*.js', '!plugins/*.js'],
-					dest: 'dev/build/js/',
+					cwd: 'dev/js/',
+					src: ['**/*.js', '!plugins/*.js', '!**/*.min.js'],
+					dest: 'build/js/',
 					expand: true,
 					ext: '.min.js'
 				}]
@@ -123,9 +130,15 @@ module.exports = function (grunt) {
 
 
 		copy: {
+			dev: {
+				cwd: 'dev/',
+				src: ['**/*.min.*', 'plugins/**/*', 'img/**/*', 'static/**/*'],
+				dest: 'build/',
+				expand: true
+			},
 			build: {
-				cwd: 'dev/build',
-				src: [ '**/*'],
+				cwd: 'build/',
+				src: ['**/*'],
 				dest: 'public/assets/',
 				expand: true,
 			},
@@ -134,14 +147,14 @@ module.exports = function (grunt) {
 
 		clean: {
 			build: {
-				src: ['dev/build']
+				src: ['build']
 			}
 		}
 
 	});
 
 	// Default Tasks
-	grunt.registerTask('default', ['clean', 'jade:dev', 'sass:dev', 'autoprefixer', 'concat', 'uglify:dev', 'connect', 'watch']);
+	grunt.registerTask('default', ['clean', 'jade:dev', 'sass:dev', 'autoprefixer', 'concat', 'uglify:dev', 'connect', 'copy:dev', 'watch']);
 
 	// Build Tasks
 	grunt.registerTask('build', ['clean', 'sass:build', 'autoprefixer', 'concat', 'uglify:build', 'copy']);
